@@ -1,48 +1,49 @@
 .data
-arr: .word 5,3,2,1,4
+arr: .word 1,3,4096,16,256
 .text
 main:
-#get base address
-la x8, arr
+#get array base address
+la x3, arr
 #init i
-add x15, x0, x0
+addi x5, x0, 0
 #for loop i
 L1:
-#init mid_id
-add x16, x0, x15
-#init j
-addi x6, x15, 1
+#init mid_id = i
+addi x7, x5, 0
+#init j = i + 1
+addi x6, x5, 1
 #for loop j
 L2:
-slli x7, x6, 2
-slli x28, x16, 2
-add x5, x8, x28
-lw x31, 0(x5)
-add x5, x8, x7
-lw x30, 0(x5)
-bge x30, x31, nochange
-add x16, x0, x6
+#get arr[j] address offset and address
+slli x29, x6, 2
+add x13, x3, x29
+lw x10, 0(x13)
+#get arr[mid_id] address offset and address
+slli x30, x7, 2
+add x14, x3, x30
+lw x11, 0(x14)
+#check if condition x10 = arr[j] ; x11 = arr[mid_id]
+bge x10, x11, nochange
+addi x7, x6, 0
 nochange:
+#j++
 addi x6, x6, 1
-addi x9, x0, 5
-blt x6, x9, L2
-swap:
-#get a[i] 
-slli x29, x15, 2
-add x5, x29, x8
-#load a[i] in x30
-lw x30, 0(x5)
-#get a[mid_id]
-slli x28, x16, 2
-add x5, x28, x8
-#load a{mid_id] in x31
-lw x31, 0(x5)
-#put a[mid_id] in a[i]
-add x5, x29, x8
-sw x31, 0(x5)
-#get a[mid_id]
-add x5, x28, x8
-sw x30, 0(x5)
-addi x1, x0, 4
-addi x15, x15, 1
-blt x15, x1, L1
+addi x19, x0, 5
+blt x6, x19, L2
+#get arr[i] address offset and address
+slli x28, x5, 2
+add x12, x3, x28
+#get arr[mid_id] address offset and address
+slli x30, x7, 2
+add x14, x3, x30
+# temp = arr[i]
+lw x10, 0(x12)
+# arr[i] = arr[mid_id]
+lw x11, 0(x14)
+sw x11, 0(x12)
+# arr[mid_id] = temp
+sw x10, 0(x14)
+#i++
+addi x5, x5, 1
+addi x18, x0, 4
+blt x5, x18, L1
