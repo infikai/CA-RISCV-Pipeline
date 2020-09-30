@@ -23,7 +23,9 @@ slli x30, x7, 2
 add x14, x3, x30
 lw x11, 0(x14)
 #check if condition x10 = arr[j] ; x11 = arr[mid_id]
-bge x10, x11, nochange
+blt x10, x11, change
+j nochange
+change:
 addi x7, x6, 0
 nochange:
 #j++
