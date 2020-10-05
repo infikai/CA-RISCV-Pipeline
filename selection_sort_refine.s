@@ -7,6 +7,8 @@ main:
         la x3, arr
         #init i
         addi x5, x0, 0
+	addi x19, x0, 5
+	addi x18, x0, 4
 #for loop i
 L1:
         #init mid_id = i
@@ -29,7 +31,6 @@ L2:
 nochange:
         #j++
         addi x6, x6, 1
-        addi x19, x0, 5
         blt x6, x19, L2
         #get arr[i] address offset and address
         slli x28, x5, 2
@@ -41,10 +42,8 @@ nochange:
         lw x10, 0(x12)
         # arr[i] = arr[mid_id]
         lw x11, 0(x14)
+        addi x5, x5, 1
         sw x11, 0(x12)
         # arr[mid_id] = temp
         sw x10, 0(x14)
-        #i++
-        addi x5, x5, 1
-        addi x18, x0, 4
         blt x5, x18, L1
